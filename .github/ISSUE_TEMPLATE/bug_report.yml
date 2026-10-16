@@ -1,0 +1,30 @@
+name: Bug report / 错误报告 / 錯誤回報
+description: Report a reproducible problem in Percolume / 报告可复现的问题 / 回報可重現的問題
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version / 版本 / 版本
+      description: Which commit, release, or build are you using? / 你使用的是哪个 commit、发布版或构建？ / 你使用的是哪個 commit、發布版或建置？
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps / 复现步骤 / 重現步驟
+      description: Tell us what you did and what happened. / 请说明你的操作和实际结果。 / 請說明你的操作和實際結果。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior / 预期行为 / 預期行為
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment / 环境 / 環境
+      description: Windows version, display scaling, and relevant hardware details. / 请提供 Windows 版本、显示缩放比例和相关硬件信息。 / 請提供 Windows 版本、顯示縮放比例和相關硬體資訊。

@@ -1,0 +1,23 @@
+name: Feature request / 功能建议 / 功能建議
+description: Suggest an improvement to Percolume / 提议改进渗行 / 提議改進渗行
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or use case / 问题或场景 / 問題或場景
+      description: What would this help you do? / 这个功能可以帮助你完成什么？ / 這個功能可以幫助你完成什麼？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior / 建议行为 / 建議行為
+      description: Describe the smallest useful version of the idea. / 描述这个想法最小但有用的版本。 / 描述這個想法最小但有用的版本。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered / 考虑过的替代方案 / 考慮過的替代方案

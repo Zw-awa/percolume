@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+**/dist/
+target/
+**/target/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.local
+
+# Tauri artifacts
+src-tauri/gen/
+src-tauri/target/
+*.pdb
+
+# IDE and operating system files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test and coverage output
+coverage/
+playwright-report/
+test-results/
+
+# Local app data and debug exports
+.percolume/
+*.percolume-debug.json

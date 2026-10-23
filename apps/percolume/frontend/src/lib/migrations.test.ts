@@ -11,4 +11,8 @@ describe('migrateState', () => {
     expect(state.cells).toHaveLength(1);
     expect(state.settings.showNoteSummary).toBe(true);
   });
+  it('preserves legacy contribution days and derives their amount', () => {
+    const state = migrateState({ version: 1, days: { '2026-10-20': { count: 3, entries: [{ at: '2026-10-20T12:00:00.000Z', note: 'read' }] } } });
+    expect(state.days['2026-10-20']).toEqual({ count: 3, amount: 3, entries: [{ at: '2026-10-20T12:00:00.000Z', note: 'read', amount: 1 }] });
+  });
 });

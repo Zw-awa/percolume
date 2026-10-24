@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { AppState, Cell } from './types';
 import { defaultState } from './lib/defaultState';
 import { loadState, saveState } from './lib/storage';
-import { breakthrough, randomEmptyIndex } from './lib/grid';
+import { breakthrough, randomProgressCells } from './lib/grid';
 
 const dateKey = (date = new Date()) => date.toISOString().slice(0, 10);
 const dateLabel = new Intl.DateTimeFormat('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -26,7 +26,7 @@ export default function App() {
   const lit = state.cells.filter(c => !c.pending).length;
   const percent = Math.min(100, Math.round(lit / total * 100));
   const today = state.days[dateKey()]?.amount ?? state.days[dateKey()]?.count ?? 0;
-  const addProgress = () => { const requested = Math.max(1, Math.min(state.size * state.size - lit, Math.round(Number(amount) || 0))); if (!requested) return; const nextCells = [...state.cells]; const timestamp = new Date().toISOString(); for (let i = 0; i < requested; i++) { const index = randomEmptyIndex(state.size, nextCells); if (index === null) break; nextCells.push({ index, litAt: timestamp, note: note.trim(), pending: state.settings.delayedLighting }); } const added = nextCells.length - state.cells.length; if (!added) return; const day = state.days[dateKey()] ?? { count: 0, amount: 0, entries: [] }; const entry = { at: timestamp, note: note.trim(), amount: added }; const days = { ...state.days, [dateKey()]: { count: day.count + 1, amount: (day.amount ?? day.count) + added, entries: [...day.entries, entry] } }; setState({ ...state, cells: nextCells, days, streak: streakFor(days) }); setNote(''); setAmount('1'); if (breakthrough(state.size, nextCells).length) setBreakthroughSeen(true); };
+  const addProgress = () => { const requested = Math.max(1, Math.min(state.size * state.size - lit, Math.round(Number(amount) || 0))); if (!requested) return; const timestamp = new Date().toISOString(); const addedCells = randomProgressCells(state.size, state.cells, requested, index => ({ index, litAt: timestamp, note: note.trim(), pending: state.settings.delayedLighting })); const added = addedCells.length; if (!added) return; const nextCells = [...state.cells, ...addedCells]; const day = state.days[dateKey()] ?? { count: 0, amount: 0, entries: [] }; const entry = { at: timestamp, note: note.trim(), amount: added }; const days = { ...state.days, [dateKey()]: { count: day.count + 1, amount: (day.amount ?? day.count) + added, entries: [...day.entries, entry] } }; setState({ ...state, cells: nextCells, days, streak: streakFor(days) }); setNote(''); setAmount('1'); if (breakthrough(state.size, nextCells).length) setBreakthroughSeen(true); };
   const editGoal = () => { if (!editing) { setGoalDraft(state.goal); setEditing(true); return; } const goal = goalDraft.trim(); if (goal) setState({ ...state, goal }); setEditing(false); };
   const reshuffle = () => { if (!window.confirm('重新洗牌将清空当前网格位置，但保留累计记录。确定继续吗？')) return; setReshuffling(true); const indices = Array.from({ length: total }, (_, i) => i).sort(() => Math.random() - .5); window.setTimeout(() => { setState({ ...state, cells: state.cells.map((cell, i) => ({ ...cell, index: indices[i] })) }); setReshuffling(false); }, 450); };
   const updateSettings = (patch: Partial<AppState['settings']>) => setState({ ...state, settings: { ...state.settings, ...patch } });

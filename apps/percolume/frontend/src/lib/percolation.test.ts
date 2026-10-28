@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { breakthrough, randomProgressCells } from './grid';
+import { breakthrough, decayCells, randomProgressCells } from './grid';
 const cells = (indexes: number[]) => indexes.map(index => ({ index, litAt: '', note: '' }));
 describe('breakthrough', () => {
   it('finds a straight path from top to bottom', () => expect(breakthrough(3, cells([0, 3, 6]))).toEqual([0, 3, 6]));
@@ -17,5 +17,16 @@ describe('randomProgressCells', () => {
     expect(result).toHaveLength(3);
     expect(new Set(result.map(cell => cell.index)).size).toBe(3);
     expect(result.every(cell => cell.index > 0 && cell.index < 4)).toBe(true);
+  });
+});
+describe('decayCells', () => {
+  it('removes only the oldest settled cell past the configured age', () => {
+    const now = new Date('2026-10-28T12:00:00.000Z');
+    const input = [
+      { index: 0, litAt: '2026-09-01T12:00:00.000Z', note: 'old' },
+      { index: 1, litAt: '2026-10-20T12:00:00.000Z', note: 'new' },
+      { index: 2, litAt: '2026-09-01T12:00:00.000Z', note: 'pending', pending: true },
+    ];
+    expect(decayCells(input, now, 30).map(cell => cell.index)).toEqual([1, 2]);
   });
 });

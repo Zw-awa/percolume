@@ -15,4 +15,10 @@ describe('migrateState', () => {
     const state = migrateState({ version: 1, days: { '2026-10-20': { count: 3, entries: [{ at: '2026-10-20T12:00:00.000Z', note: 'read' }] } } });
     expect(state.days['2026-10-20']).toEqual({ count: 3, amount: 3, entries: [{ at: '2026-10-20T12:00:00.000Z', note: 'read', amount: 1 }] });
   });
+  it('bounds new progress settings and fills defaults', () => {
+    const state = migrateState({ settings: { cellsPerEntry: 0, decayThreshold: 9999, unit: 'invalid' } });
+    expect(state.settings.cellsPerEntry).toBe(1);
+    expect(state.settings.decayThreshold).toBe(365);
+    expect(state.settings.unit).toBe('times');
+  });
 });

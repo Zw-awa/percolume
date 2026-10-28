@@ -7,6 +7,13 @@ export function randomProgressCells(size: number, cells: Cell[], count: number, 
   for (let i = free.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [free[i], free[j]] = [free[j], free[i]]; }
   return free.slice(0, amount).map(create);
 }
+export function decayCells(cells: Cell[], now = new Date(), thresholdDays = 30): Cell[] {
+  const threshold = Math.max(1, Math.floor(thresholdDays)) * 86400000;
+  const eligible = cells.filter(cell => !cell.pending && Number.isFinite(Date.parse(cell.litAt)) && now.getTime() - Date.parse(cell.litAt) >= threshold);
+  if (!eligible.length) return cells;
+  const oldest = eligible.reduce((candidate, cell) => Date.parse(cell.litAt) < Date.parse(candidate.litAt) ? cell : candidate);
+  return cells.filter(cell => cell !== oldest);
+}
 export function breakthrough(size: number, cells: Cell[]): number[] {
   if (!Number.isInteger(size) || size < 1) return [];
   const limit = size * size;

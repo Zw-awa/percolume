@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { breakthrough, decayCells, randomProgressCells } from './grid';
+import { breakthrough, decayCells, randomProgressCells, reshuffleCells } from './grid';
 const cells = (indexes: number[]) => indexes.map(index => ({ index, litAt: '', note: '' }));
 describe('breakthrough', () => {
   it('finds a straight path from top to bottom', () => expect(breakthrough(3, cells([0, 3, 6]))).toEqual([0, 3, 6]));
@@ -28,5 +28,20 @@ describe('decayCells', () => {
       { index: 2, litAt: '2026-09-01T12:00:00.000Z', note: 'pending', pending: true },
     ];
     expect(decayCells(input, now, 30).map(cell => cell.index)).toEqual([1, 2]);
+  });
+});
+describe('reshuffleCells', () => {
+  it('keeps cell metadata while assigning unique positions', () => {
+    const input = [
+      { index: 0, litAt: 'a', note: 'first' },
+      { index: 1, litAt: 'b', note: 'second', pending: true },
+      { index: 2, litAt: 'c', note: 'third' },
+    ];
+    const result = reshuffleCells(2, input, () => 0.25);
+    expect(result).toHaveLength(3);
+    expect(new Set(result.map(cell => cell.index)).size).toBe(3);
+    expect(result.every(cell => cell.index >= 0 && cell.index < 4)).toBe(true);
+    expect(result.map(cell => cell.note)).toEqual(['first', 'second', 'third']);
+    expect(input.map(cell => cell.index)).toEqual([0, 1, 2]);
   });
 });

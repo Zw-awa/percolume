@@ -1,0 +1,3 @@
+export function ReshuffleDialog({ open, onCancel, onConfirm }: { open: boolean; onCancel: () => void; onConfirm: () => void }) {
+  return open ? <div className="overlay reshuffle-overlay" onMouseDown={event => { if (event.target === event.currentTarget) onCancel(); }}><article className="reshuffle-dialog" role="dialog" aria-modal="true" aria-labelledby="reshuffle-title"><button className="close" onClick={onCancel} aria-label="关闭">×</button><span className="label">重新排列</span><h2 id="reshuffle-title">让水流寻找新路径</h2><p>已记录的格子会随机换位，日期和备注继续保留。</p><div className="reshuffle-actions"><button className="secondary" onClick={onCancel}>取消</button><button className="primary" onClick={onConfirm}>开始洗牌</button></div></article></div> : null;
+}

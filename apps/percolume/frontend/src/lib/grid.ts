@@ -14,6 +14,12 @@ export function decayCells(cells: Cell[], now = new Date(), thresholdDays = 30):
   const oldest = eligible.reduce((candidate, cell) => Date.parse(cell.litAt) < Date.parse(candidate.litAt) ? cell : candidate);
   return cells.filter(cell => cell !== oldest);
 }
+export function reshuffleCells(size: number, cells: Cell[], random = Math.random): Cell[] {
+  const capacity = Math.max(0, Math.floor(size * size));
+  const slots = Array.from({ length: capacity }, (_, index) => index);
+  for (let i = slots.length - 1; i > 0; i--) { const j = Math.floor(random() * (i + 1)); [slots[i], slots[j]] = [slots[j], slots[i]]; }
+  return cells.map((cell, index) => slots[index] === undefined ? cell : { ...cell, index: slots[index] });
+}
 export function breakthrough(size: number, cells: Cell[]): number[] {
   if (!Number.isInteger(size) || size < 1) return [];
   const limit = size * size;

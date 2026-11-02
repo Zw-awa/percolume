@@ -1,0 +1,29 @@
+html,
+body,
+#root {
+  background: transparent;
+}
+
+body {
+  color: var(--ink);
+}
+
+.shell {
+  background: transparent;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px #173d2530;
+  overflow: hidden;
+}
+
+.shell > header,
+.shell > main {
+  background: var(--paper);
+}
+
+.shell > header {
+  border-radius: 16px 16px 0 0;
+}
+
+.shell > main {
+  border-radius: 0 0 16px 16px;
+}

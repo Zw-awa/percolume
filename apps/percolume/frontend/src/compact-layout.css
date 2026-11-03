@@ -1,0 +1,128 @@
+.shell {
+  width: 100%;
+  min-height: 100vh;
+  padding: 14px;
+}
+
+.shell > header {
+  padding: 12px 14px;
+}
+
+.brand {
+  font-size: 11px;
+}
+
+.window-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.intro {
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-size: 25px;
+  line-height: 1.2;
+  margin: 9px 0;
+}
+
+.sub {
+  font-size: 12px;
+  margin: 0;
+}
+
+.card {
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.card h2 {
+  font-size: 16px;
+  margin: 6px 0 12px;
+}
+
+.log-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.log-actions input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 8px;
+  font: 12px Manrope;
+}
+
+.log-actions .amount-input {
+  flex: 0 0 48px;
+}
+
+.primary,
+.secondary {
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+
+.flow-wrap {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.flow-grid {
+  width: min(52vw, 220px);
+  aspect-ratio: 1;
+  gap: 3px;
+  padding: 6px;
+  border-radius: 8px;
+}
+
+.flow-cell {
+  border-radius: 2px;
+}
+
+.percent {
+  font-size: 36px;
+}
+
+.percent small {
+  font-size: 15px;
+}
+
+.flow-side p {
+  font-size: 11px;
+}
+
+.bar {
+  height: 4px;
+  margin: 10px 0;
+}
+
+footer {
+  font-size: 8px;
+  padding: 10px 2px;
+}
+
+@media (max-width: 420px) {
+  .shell {
+    padding: 8px;
+  }
+
+  .flow-wrap {
+    gap: 8px;
+  }
+
+  .flow-grid {
+    width: 53vw;
+  }
+
+  .log-actions {
+    flex-wrap: wrap;
+  }
+}

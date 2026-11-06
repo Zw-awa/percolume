@@ -15,7 +15,9 @@ Percolume (渗行) is a quiet desktop widget for making small efforts visible. R
 - A tooltip showing the date and contribution count for each day.
 - A visual grid that makes accumulated progress easy to scan.
 - Local-first storage with no account required.
-- A small, distraction-free interface for everyday use.
+- A compact Windows desktop island with a transparent, borderless, always-on-top window.
+- Draggable header, minimize and close controls, plus optional desktop click-through.
+- Local progress records and window preferences saved on the device.
 
 ## Use Percolume
 
@@ -34,11 +36,15 @@ npm install
 npm run dev
 ```
 
+For the desktop widget, use `npm run tauri:dev`. The default window is approximately 420 x 560, centered, transparent, borderless, and always on top. Open Settings to disable always-on-top or enable click-through.
+
 To create a production build:
 
 ```bash
 npm run build
 ```
+
+Windows packaging requires WebView2, the MSVC Visual C++ toolchain, and NSIS. Run `npm run tauri:build` to produce the installer.
 
 ## Repository
 

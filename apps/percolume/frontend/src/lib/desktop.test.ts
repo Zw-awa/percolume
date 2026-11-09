@@ -7,6 +7,7 @@ import {
   minimizeWindow,
   setAlwaysOnTop,
   setClickThrough,
+  watchSelectiveClickThrough,
 } from "./window";
 
 describe("desktop configuration", () => {
@@ -31,13 +32,28 @@ describe("desktop configuration", () => {
     const [windowConfig] = config.app.windows;
 
     expect(windowConfig).toMatchObject({
-      width: 420,
-      height: 560,
+      width: 500,
+      height: 200,
       decorations: false,
       transparent: true,
       alwaysOnTop: true,
       fullscreen: false,
+      backgroundColor: "#00000000",
+      noRedirectionBitmap: true,
     });
+
+    const capability = JSON.parse(
+      readFileSync(
+        resolve(process.cwd(), "src-tauri/capabilities/default.json"),
+        "utf8",
+      ),
+    );
+    expect(capability.permissions).toContain(
+      "core:window:allow-start-dragging",
+    );
+    expect(capability.permissions).toContain(
+      "core:window:allow-cursor-position",
+    );
   });
 });
 
@@ -48,5 +64,6 @@ describe("browser window fallbacks", () => {
     await expect(closeWindow()).resolves.toBeUndefined();
     await expect(setAlwaysOnTop(true)).resolves.toBeUndefined();
     await expect(setClickThrough(true)).resolves.toBeUndefined();
+    expect(watchSelectiveClickThrough()).toEqual(expect.any(Function));
   });
 });

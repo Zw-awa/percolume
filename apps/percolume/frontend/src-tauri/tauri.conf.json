@@ -13,14 +13,17 @@
     "windows": [
       {
         "title": "Percolume",
-        "width": 420,
-        "height": 560,
+        "width": 500,
+        "height": 200,
         "minWidth": 360,
-        "minHeight": 460,
+        "minHeight": 160,
         "center": true,
         "resizable": true,
         "decorations": false,
         "transparent": true,
+        "backgroundColor": "#00000000",
+        "noRedirectionBitmap": true,
+        "shadow": false,
         "alwaysOnTop": true,
         "fullscreen": false
       }
@@ -39,6 +42,8 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "windows": { "nsis": { "installMode": "perMachine", "displayLanguageSelector": true } }
+    "windows": {
+      "nsis": { "installMode": "perMachine", "displayLanguageSelector": true }
+    }
   }
 }

@@ -70,10 +70,9 @@
 
 .contribution-grid {
   display: grid;
+  grid-template-columns: repeat(var(--n), 8px);
   grid-auto-rows: 8px;
-  grid-template-columns: repeat(auto-fit, 8px);
-  width: min(100%, 460px);
-  justify-content: center;
+  width: max-content;
   gap: 1px;
   padding: 0;
   background: transparent;

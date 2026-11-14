@@ -32,8 +32,8 @@ describe("desktop configuration", () => {
     const [windowConfig] = config.app.windows;
 
     expect(windowConfig).toMatchObject({
-      width: 500,
-      height: 200,
+      width: 250,
+      height: 350,
       decorations: false,
       transparent: true,
       alwaysOnTop: true,

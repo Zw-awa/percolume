@@ -168,6 +168,7 @@ export default function App() {
       <main className="island-main">
         <div
           className="contribution-grid"
+          style={{ "--n": state.size } as React.CSSProperties}
           aria-label="贡献格子"
         >
           {Array.from({ length: total }, (_, index) => {

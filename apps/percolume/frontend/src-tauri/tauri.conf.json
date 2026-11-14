@@ -13,10 +13,10 @@
     "windows": [
       {
         "title": "Percolume",
-        "width": 500,
-        "height": 200,
-        "minWidth": 360,
-        "minHeight": 160,
+        "width": 250,
+        "height": 350,
+        "minWidth": 250,
+        "minHeight": 350,
         "center": true,
         "resizable": true,
         "decorations": false,

@@ -7,6 +7,9 @@ dist/
 **/dist/
 target/
 **/target/
+*.tsbuildinfo
+**/vite.config.js
+**/vite.config.d.ts
 
 # Local environment and secrets
 .env

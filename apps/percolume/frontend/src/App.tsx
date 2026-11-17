@@ -123,79 +123,81 @@ export default function App() {
 
   return (
     <div className="shell">
-      <header
-        className="island-toolbar"
-        data-tauri-drag-region
-        onPointerDown={(event) => {
-          const target = event.target as HTMLElement;
-          if (
-            event.button === 0 &&
-            !target.closest("button, input, select, textarea")
-          ) {
-            void startDragging();
-          }
-        }}
-      >
-        <span className="toolbar-spacer" data-tauri-drag-region />
-        <div className="window-actions">
-          <button
-            className="window-button"
-            onClick={() => void minimizeWindow()}
-            aria-label="最小化"
-            title="最小化"
-          >
-            <span aria-hidden="true">−</span>
-          </button>
-          <button
-            className="window-button"
-            onClick={() => setSettingsOpen(true)}
-            aria-label="设置"
-            title="设置"
-          >
-            <span aria-hidden="true">⚙</span>
-          </button>
-          <button
-            className="window-button window-button-close"
-            onClick={() => void closeWindow()}
-            aria-label="关闭"
-            title="关闭"
-          >
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-      </header>
-
-      <main className="island-main">
-        <div
-          className="contribution-grid"
-          style={{ "--n": state.size } as React.CSSProperties}
-          aria-label="贡献格子"
+      <div className="island-content">
+        <header
+          className="island-toolbar"
+          data-tauri-drag-region
+          onPointerDown={(event) => {
+            const target = event.target as HTMLElement;
+            if (
+              event.button === 0 &&
+              !target.closest("button, input, select, textarea")
+            ) {
+              void startDragging();
+            }
+          }}
         >
-          {Array.from({ length: total }, (_, index) => {
-            const cell = state.cells.find((item) => item.index === index);
+          <span className="toolbar-spacer" data-tauri-drag-region />
+          <div className="window-actions">
+            <button
+              className="window-button"
+              onClick={() => void minimizeWindow()}
+              aria-label="最小化"
+              title="最小化"
+            >
+              <span aria-hidden="true">−</span>
+            </button>
+            <button
+              className="window-button"
+              onClick={() => setSettingsOpen(true)}
+              aria-label="设置"
+              title="设置"
+            >
+              <span aria-hidden="true">⚙</span>
+            </button>
+            <button
+              className="window-button window-button-close"
+              onClick={() => void closeWindow()}
+              aria-label="关闭"
+              title="关闭"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </header>
 
-            return (
-              <button
-                key={index}
-                className={`contribution-cell ${cell && !cell.pending ? "on" : ""} ${cell?.pending ? "pending" : ""} ${path.has(index) ? "path" : ""}`}
-                onClick={() => {
-                  if (
-                    !cell ||
-                    cell.pending ||
-                    !state.settings.showCellDetails
-                  ) {
-                    return;
-                  }
+        <main className="island-main">
+          <div
+            className="contribution-grid"
+            style={{ "--n": state.size } as React.CSSProperties}
+            aria-label="贡献格子"
+          >
+            {Array.from({ length: total }, (_, index) => {
+              const cell = state.cells.find((item) => item.index === index);
 
-                  setSelected(cell);
-                  setDetailNote(cell.note);
-                }}
-                aria-label={cell ? "查看贡献记录" : "未点亮格子"}
-              />
-            );
-          })}
-        </div>
-      </main>
+              return (
+                <button
+                  key={index}
+                  className={`contribution-cell ${cell && !cell.pending ? "on" : ""} ${cell?.pending ? "pending" : ""} ${path.has(index) ? "path" : ""}`}
+                  onClick={() => {
+                    if (
+                      !cell ||
+                      cell.pending ||
+                      !state.settings.showCellDetails
+                    ) {
+                      return;
+                    }
+
+                    setSelected(cell);
+                    setDetailNote(cell.note);
+                  }}
+                  aria-label={cell ? "查看贡献记录" : "未点亮格子"}
+                />
+              );
+            })}
+          </div>
+        </main>
+      </div>
 
       {selected && (
         <div className="overlay" onClick={() => setSelected(null)}>

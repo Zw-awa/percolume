@@ -1,9 +1,17 @@
 .shell {
+  display: grid;
   width: 100%;
   min-height: 100vh;
   height: 100vh;
+  place-items: center;
   padding: 2px;
   background: transparent;
+}
+
+.island-content {
+  display: grid;
+  width: max-content;
+  gap: 2px;
 }
 
 .island-toolbar {
@@ -11,6 +19,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 24px;
+  width: 100%;
   padding: 2px;
   background: transparent;
   border: 0;
@@ -60,9 +69,8 @@
 .island-main {
   position: relative;
   display: grid;
-  min-height: calc(100vh - 28px);
   place-items: center;
-  padding: 2px 4px;
+  padding: 0;
   background: transparent;
   border: 0;
   border-radius: 0;

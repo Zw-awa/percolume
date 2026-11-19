@@ -1,3 +1,4 @@
+import { LogicalSize } from "@tauri-apps/api/dpi";
 import { cursorPosition, getCurrentWindow } from "@tauri-apps/api/window";
 
 export const isTauri = () =>
@@ -26,6 +27,11 @@ export async function startDragging() {
 export async function closeWindow() {
   await current()?.close();
 }
+
+export async function setWindowSize(width: number, height: number) {
+  await current()?.setSize(new LogicalSize(width, height));
+}
+
 export async function setAlwaysOnTop(value: boolean) {
   await current()?.setAlwaysOnTop(value);
 }

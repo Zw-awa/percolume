@@ -13,12 +13,16 @@ import {
   minimizeWindow,
   setAlwaysOnTop,
   setClickThrough,
+  setWindowSize,
   startDragging,
   watchSelectiveClickThrough,
 } from "./lib/window";
 
 const dateKey = (date = new Date()) => date.toISOString().slice(0, 10);
 const compactGridSize = 18;
+const islandWindowWidth = 250;
+const settingsWindowWidth = 560;
+const islandWindowHeight = 350;
 
 export default function App() {
   const [state, setState] = useState<AppState>(defaultState);
@@ -119,10 +123,20 @@ export default function App() {
     }
   };
 
+  const openSettings = () => {
+    setSettingsOpen(true);
+    void setWindowSize(settingsWindowWidth, islandWindowHeight);
+  };
+
+  const closeSettings = () => {
+    setSettingsOpen(false);
+    void setWindowSize(islandWindowWidth, islandWindowHeight);
+  };
+
   if (!ready) return <main className="loading" aria-label="正在加载" />;
 
   return (
-    <div className="shell">
+    <div className={`shell ${settingsOpen ? "settings-open" : ""}`}>
       <div className="island-content">
         <header
           className="island-toolbar"
@@ -140,6 +154,15 @@ export default function App() {
           <span className="toolbar-spacer" data-tauri-drag-region />
           <div className="window-actions">
             <button
+              className="window-button window-button-add"
+              onClick={addProgress}
+              disabled={state.cells.length >= total}
+              aria-label="记录一次投入"
+              title="记录一次投入"
+            >
+              <span aria-hidden="true">+</span>
+            </button>
+            <button
               className="window-button"
               onClick={() => void minimizeWindow()}
               aria-label="最小化"
@@ -149,7 +172,7 @@ export default function App() {
             </button>
             <button
               className="window-button"
-              onClick={() => setSettingsOpen(true)}
+              onClick={openSettings}
               aria-label="设置"
               title="设置"
             >
@@ -197,6 +220,221 @@ export default function App() {
             })}
           </div>
         </main>
+
+        {settingsOpen && (
+          <aside className="settings-panel" aria-label="设置">
+            <header
+              className="settings-toolbar"
+              data-tauri-drag-region
+              onPointerDown={(event) => {
+                const target = event.target as HTMLElement;
+                if (
+                  event.button === 0 &&
+                  !target.closest("button, input, select, textarea")
+                ) {
+                  void startDragging();
+                }
+              }}
+            >
+              <span className="settings-drag-handle" data-tauri-drag-region />
+              <h2>设置</h2>
+              <button
+                className="window-button window-button-close"
+                onClick={closeSettings}
+                aria-label="关闭设置"
+                title="关闭设置"
+              >
+                <span aria-hidden="true">×</span>
+              </button>
+            </header>
+
+            <label>
+              目标名称
+              <input
+                value={state.goal}
+                onChange={(event) =>
+                  setState({ ...state, goal: event.target.value })
+                }
+              />
+            </label>
+
+            <label>
+              本次备注
+              <input
+                value={entryNote}
+                maxLength={120}
+                onChange={(event) => setEntryNote(event.target.value)}
+                placeholder="可选"
+              />
+            </label>
+
+            <button
+              className="primary"
+              onClick={addProgress}
+              disabled={state.cells.length >= total}
+            >
+              记录一次投入
+            </button>
+
+            <label>
+              网格尺寸
+              <input
+                type="number"
+                min="1"
+                max={compactGridSize}
+                value={state.size}
+                onChange={(event) =>
+                  setState({
+                    ...state,
+                    size: Math.max(
+                      1,
+                      Math.min(compactGridSize, Number(event.target.value) || 1),
+                    ),
+                    cells: [],
+                  })
+                }
+              />
+            </label>
+
+            <label>
+              每次点亮格数
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={state.settings.cellsPerEntry}
+                onChange={(event) =>
+                  patchSettings({
+                    cellsPerEntry: Math.max(
+                      1,
+                      Math.min(100, Number(event.target.value) || 1),
+                    ),
+                  })
+                }
+              />
+            </label>
+
+            <label>
+              贡献颜色
+              <input
+                type="color"
+                value={state.settings.color}
+                onChange={(event) => patchSettings({ color: event.target.value })}
+              />
+            </label>
+
+            <label>
+              记录单位
+              <select
+                value={state.settings.unit}
+                onChange={(event) =>
+                  patchSettings({
+                    unit: event.target.value as "minutes" | "times",
+                  })
+                }
+              >
+                <option value="times">次数</option>
+                <option value="minutes">分钟</option>
+              </select>
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.settings.showCellDetails}
+                onChange={(event) =>
+                  patchSettings({ showCellDetails: event.target.checked })
+                }
+              />
+              显示格子备注
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.settings.showNoteSummary}
+                onChange={(event) =>
+                  patchSettings({ showNoteSummary: event.target.checked })
+                }
+              />
+              显示备注摘要
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.settings.delayedLighting}
+                onChange={(event) =>
+                  patchSettings({ delayedLighting: event.target.checked })
+                }
+              />
+              延迟到次日点亮
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.settings.decay}
+                onChange={(event) =>
+                  patchSettings({ decay: event.target.checked })
+                }
+              />
+              启用随机衰减
+            </label>
+
+            <label>
+              衰减周期
+              <input
+                type="number"
+                min="1"
+                max="365"
+                value={state.settings.decayThreshold}
+                onChange={(event) =>
+                  patchSettings({
+                    decayThreshold: Math.max(
+                      1,
+                      Math.min(365, Number(event.target.value) || 1),
+                    ),
+                  })
+                }
+              />
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.window.alwaysOnTop}
+                onChange={(event) =>
+                  void patchWindow({ alwaysOnTop: event.target.checked })
+                }
+              />
+              始终置顶
+            </label>
+
+            <label className="settings-check">
+              <input
+                type="checkbox"
+                checked={state.window.clickThrough}
+                onChange={(event) =>
+                  void patchWindow({ clickThrough: event.target.checked })
+                }
+              />
+              透明区域穿透
+            </label>
+
+            <button
+              className="secondary"
+              onClick={() =>
+                setState({
+                  ...state,
+                  cells: reshuffleCells(state.size, state.cells),
+                })
+              }
+            >
+              重新洗牌
+            </button>
+          </aside>
+        )}
       </div>
 
       {selected && (
@@ -238,204 +476,6 @@ export default function App() {
         </div>
       )}
 
-      {settingsOpen && (
-        <aside className="settings-panel" aria-label="设置">
-          <button
-            className="close"
-            onClick={() => setSettingsOpen(false)}
-            aria-label="关闭设置"
-          >
-            ×
-          </button>
-          <h2>设置</h2>
-
-          <label>
-            目标名称
-            <input
-              value={state.goal}
-              onChange={(event) =>
-                setState({ ...state, goal: event.target.value })
-              }
-            />
-          </label>
-
-          <label>
-            本次备注
-            <input
-              value={entryNote}
-              maxLength={120}
-              onChange={(event) => setEntryNote(event.target.value)}
-              placeholder="可选"
-            />
-          </label>
-
-          <button
-            className="primary"
-            onClick={addProgress}
-            disabled={state.cells.length >= total}
-          >
-            记录一次投入
-          </button>
-
-          <label>
-            网格尺寸
-            <input
-              type="number"
-              min="1"
-              max={compactGridSize}
-              value={state.size}
-              onChange={(event) =>
-                setState({
-                  ...state,
-                  size: Math.max(
-                    1,
-                    Math.min(compactGridSize, Number(event.target.value) || 1),
-                  ),
-                  cells: [],
-                })
-              }
-            />
-          </label>
-
-          <label>
-            每次点亮格数
-            <input
-              type="number"
-              min="1"
-              max="100"
-              value={state.settings.cellsPerEntry}
-              onChange={(event) =>
-                patchSettings({
-                  cellsPerEntry: Math.max(
-                    1,
-                    Math.min(100, Number(event.target.value) || 1),
-                  ),
-                })
-              }
-            />
-          </label>
-
-          <label>
-            贡献颜色
-            <input
-              type="color"
-              value={state.settings.color}
-              onChange={(event) => patchSettings({ color: event.target.value })}
-            />
-          </label>
-
-          <label>
-            记录单位
-            <select
-              value={state.settings.unit}
-              onChange={(event) =>
-                patchSettings({
-                  unit: event.target.value as "minutes" | "times",
-                })
-              }
-            >
-              <option value="times">次数</option>
-              <option value="minutes">分钟</option>
-            </select>
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.settings.showCellDetails}
-              onChange={(event) =>
-                patchSettings({ showCellDetails: event.target.checked })
-              }
-            />
-            显示格子备注
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.settings.showNoteSummary}
-              onChange={(event) =>
-                patchSettings({ showNoteSummary: event.target.checked })
-              }
-            />
-            显示备注摘要
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.settings.delayedLighting}
-              onChange={(event) =>
-                patchSettings({ delayedLighting: event.target.checked })
-              }
-            />
-            延迟到次日点亮
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.settings.decay}
-              onChange={(event) =>
-                patchSettings({ decay: event.target.checked })
-              }
-            />
-            启用随机衰减
-          </label>
-
-          <label>
-            衰减周期
-            <input
-              type="number"
-              min="1"
-              max="365"
-              value={state.settings.decayThreshold}
-              onChange={(event) =>
-                patchSettings({
-                  decayThreshold: Math.max(
-                    1,
-                    Math.min(365, Number(event.target.value) || 1),
-                  ),
-                })
-              }
-            />
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.window.alwaysOnTop}
-              onChange={(event) =>
-                void patchWindow({ alwaysOnTop: event.target.checked })
-              }
-            />
-            始终置顶
-          </label>
-
-          <label className="settings-check">
-            <input
-              type="checkbox"
-              checked={state.window.clickThrough}
-              onChange={(event) =>
-                void patchWindow({ clickThrough: event.target.checked })
-              }
-            />
-            透明区域穿透
-          </label>
-
-          <button
-            className="secondary"
-            onClick={() =>
-              setState({
-                ...state,
-                cells: reshuffleCells(state.size, state.cells),
-              })
-            }
-          >
-            重新洗牌
-          </button>
-        </aside>
-      )}
     </div>
   );
 }

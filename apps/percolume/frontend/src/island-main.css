@@ -1,14 +1,16 @@
 .shell {
+  position: relative;
   display: grid;
   width: 100%;
   min-height: 100vh;
   height: 100vh;
-  place-items: center;
+  place-items: center start;
   padding: 2px;
   background: transparent;
 }
 
 .island-content {
+  position: relative;
   display: grid;
   width: max-content;
   gap: 2px;
@@ -66,6 +68,24 @@
   background: #fff0ed;
 }
 
+.window-button-add {
+  color: #ffffff;
+  background: var(--deep);
+  border-color: var(--deep);
+  font-size: 16px;
+}
+
+.window-button-add:hover,
+.window-button-add:focus-visible {
+  color: #ffffff;
+  background: var(--green);
+}
+
+.window-button-add:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .island-main {
   position: relative;
   display: grid;
@@ -121,8 +141,12 @@
 }
 
 .settings-panel {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 2px);
   width: min(320px, calc(100vw - 20px));
-  max-height: calc(100vh - 20px);
+  height: 350px;
+  max-height: 350px;
   padding: 22px 18px;
   overflow-y: auto;
   scrollbar-width: none;

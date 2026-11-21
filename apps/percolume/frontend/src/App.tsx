@@ -133,6 +133,15 @@ export default function App() {
     void setWindowSize(islandWindowWidth, islandWindowHeight);
   };
 
+  const toggleSettings = () => {
+    if (settingsOpen) {
+      closeSettings();
+      return;
+    }
+
+    openSettings();
+  };
+
   if (!ready) return <main className="loading" aria-label="正在加载" />;
 
   return (
@@ -172,9 +181,10 @@ export default function App() {
             </button>
             <button
               className="window-button"
-              onClick={openSettings}
+              onClick={toggleSettings}
               aria-label="设置"
               title="设置"
+              aria-expanded={settingsOpen}
             >
               <span aria-hidden="true">⚙</span>
             </button>

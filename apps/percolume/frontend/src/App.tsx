@@ -232,7 +232,11 @@ export default function App() {
         </main>
 
         {settingsOpen && (
-          <aside className="settings-panel" aria-label="设置">
+          <aside
+            className="settings-panel"
+            aria-label="设置"
+            data-click-through-hit
+          >
             <header
               className="settings-toolbar"
               data-tauri-drag-region

@@ -6,6 +6,8 @@
   height: 350px;
   max-height: 350px;
   overflow: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
   background: transparent;
   border: 0;
   border-radius: 0;

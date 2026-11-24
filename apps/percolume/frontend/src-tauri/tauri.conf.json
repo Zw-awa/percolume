@@ -25,6 +25,7 @@
         "noRedirectionBitmap": true,
         "shadow": false,
         "alwaysOnTop": true,
+        "skipTaskbar": true,
         "fullscreen": false
       }
     ],

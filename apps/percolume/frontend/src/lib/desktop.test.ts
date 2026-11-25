@@ -37,6 +37,7 @@ describe("desktop configuration", () => {
       decorations: false,
       transparent: true,
       alwaysOnTop: true,
+      skipTaskbar: true,
       fullscreen: false,
       backgroundColor: "#00000000",
       noRedirectionBitmap: true,

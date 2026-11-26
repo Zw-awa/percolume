@@ -45,3 +45,37 @@ export function breakthrough(size: number, cells: Cell[]): number[] {
   }
   return [];
 }
+
+export function cellPushPath(
+  size: number,
+  sourceIndex: number,
+  targetIndex: number,
+): number[] {
+  if (size < 1 || sourceIndex === targetIndex) return [sourceIndex];
+
+  const targetRow = Math.floor(targetIndex / size);
+  const targetColumn = targetIndex % size;
+  let row = Math.floor(sourceIndex / size);
+  let column = sourceIndex % size;
+  const totalRows = Math.abs(targetRow - row);
+  const totalColumns = Math.abs(targetColumn - column);
+  const path = [sourceIndex];
+
+  while (row !== targetRow || column !== targetColumn) {
+    const remainingRows = Math.abs(targetRow - row);
+    const remainingColumns = Math.abs(targetColumn - column);
+    const rowPriority = totalRows === 0 ? 0 : remainingRows / totalRows;
+    const columnPriority =
+      totalColumns === 0 ? 0 : remainingColumns / totalColumns;
+
+    if (row !== targetRow && rowPriority >= columnPriority) {
+      row += Math.sign(targetRow - row);
+    } else {
+      column += Math.sign(targetColumn - column);
+    }
+
+    path.push(row * size + column);
+  }
+
+  return path;
+}

@@ -79,3 +79,25 @@ export function cellPushPath(
 
   return path;
 }
+
+export function moveCellsAlongPath(cells: Cell[], path: number[]): Cell[] {
+  if (path.length < 2) return cells;
+
+  const sourceIndex = path[0];
+  const draggedCell = cells.find((cell) => cell.index === sourceIndex);
+  if (!draggedCell) return cells;
+
+  const destinationByIndex = new Map<number, number>();
+  for (let index = 1; index < path.length; index += 1) {
+    destinationByIndex.set(path[index], path[index - 1]);
+  }
+
+  return cells.map((cell) => {
+    if (cell.index === sourceIndex) {
+      return { ...cell, index: path[path.length - 1] };
+    }
+
+    const destination = destinationByIndex.get(cell.index);
+    return destination === undefined ? cell : { ...cell, index: destination };
+  });
+}
